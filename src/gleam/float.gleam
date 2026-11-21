@@ -1,3 +1,5 @@
+// Modified for MoonBit target (gekko) — see NOTICE and LICENCE.
+
 //// Functions for working with floats.
 ////
 //// ## Float representation
@@ -46,6 +48,7 @@ import gleam/order.{type Order}
 ///
 @external(erlang, "gleam_stdlib", "parse_float")
 @external(javascript, "../gleam_stdlib.mjs", "parse_float")
+/// @external(moonbit, "gleam_stdlib_ffi", "float_parse")
 pub fn parse(string: String) -> Result(Float, Nil)
 
 /// Returns the string representation of the provided `Float`.
@@ -58,6 +61,7 @@ pub fn parse(string: String) -> Result(Float, Nil)
 ///
 @external(erlang, "gleam_stdlib", "float_to_string")
 @external(javascript, "../gleam_stdlib.mjs", "float_to_string")
+/// @external(moonbit, "gleam_stdlib_ffi", "float_to_string")
 pub fn to_string(x: Float) -> String
 
 /// Restricts a float between two bounds.
@@ -206,6 +210,7 @@ pub fn max(a: Float, b: Float) -> Float {
 ///
 @external(erlang, "math", "ceil")
 @external(javascript, "../gleam_stdlib.mjs", "ceiling")
+/// @external(moonbit, "gleam_stdlib_ffi", "float_ceiling")
 pub fn ceiling(x: Float) -> Float
 
 /// Rounds the value to the next lowest whole number as a `Float`.
@@ -218,6 +223,7 @@ pub fn ceiling(x: Float) -> Float
 ///
 @external(erlang, "math", "floor")
 @external(javascript, "../gleam_stdlib.mjs", "floor")
+/// @external(moonbit, "gleam_stdlib_ffi", "float_floor")
 pub fn floor(x: Float) -> Float
 
 /// Rounds the value to the nearest whole number as an `Int`.
@@ -233,6 +239,7 @@ pub fn floor(x: Float) -> Float
 /// ```
 ///
 @external(erlang, "erlang", "round")
+/// @external(moonbit, "gleam_stdlib_ffi", "float_round")
 pub fn round(x: Float) -> Int {
   case x >=. 0.0 {
     True -> js_round(x)
@@ -253,6 +260,7 @@ fn js_round(a: Float) -> Int
 ///
 @external(erlang, "erlang", "trunc")
 @external(javascript, "../gleam_stdlib.mjs", "truncate")
+/// @external(moonbit, "gleam_stdlib_ffi", "float_truncate")
 pub fn truncate(x: Float) -> Int
 
 /// Converts the value to a given precision as a `Float`.
@@ -285,6 +293,7 @@ pub fn to_precision(x: Float, precision: Int) -> Float {
 
 @external(erlang, "erlang", "float")
 @external(javascript, "../gleam_stdlib.mjs", "identity")
+/// @external(moonbit, "gleam_stdlib_ffi", "int_to_float")
 fn do_to_float(a: Int) -> Float
 
 /// Returns the absolute value of the input as a `Float`.
@@ -347,6 +356,7 @@ pub fn power(base: Float, of exponent: Float) -> Result(Float, Nil) {
 
 @external(erlang, "math", "pow")
 @external(javascript, "../gleam_stdlib.mjs", "power")
+/// @external(moonbit, "gleam_stdlib_ffi", "float_power")
 fn do_power(a: Float, b: Float) -> Float
 
 /// Returns the square root of the input as a `Float`.
@@ -430,6 +440,7 @@ fn product_loop(numbers: List(Float), initial: Float) -> Float {
 ///
 @external(erlang, "rand", "uniform")
 @external(javascript, "../gleam_stdlib.mjs", "random_uniform")
+/// @external(moonbit, "gleam_stdlib_ffi", "float_random")
 pub fn random() -> Float
 
 /// Computes the modulo of a float division of inputs as a `Result`.
@@ -597,6 +608,7 @@ pub fn logarithm(x: Float) -> Result(Float, Nil) {
 
 @external(erlang, "math", "log")
 @external(javascript, "../gleam_stdlib.mjs", "log")
+/// @external(moonbit, "gleam_stdlib_ffi", "float_log")
 fn do_log(x: Float) -> Float
 
 /// Returns e (Euler's number) raised to the power of the given exponent, as
@@ -618,4 +630,5 @@ fn do_log(x: Float) -> Float
 ///
 @external(erlang, "math", "exp")
 @external(javascript, "../gleam_stdlib.mjs", "exp")
+/// @external(moonbit, "gleam_stdlib_ffi", "float_exponential")
 pub fn exponential(x: Float) -> Float

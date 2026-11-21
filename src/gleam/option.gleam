@@ -1,3 +1,5 @@
+// Modified for MoonBit target (gekko) — see NOTICE and LICENCE.
+
 /// `Option` represents a value that may be present or not. `Some` means the value is
 /// present, `None` means the value is not.
 ///
@@ -16,6 +18,7 @@
 /// The `Option` type should only be used for taking optional values as
 /// function arguments, or for storing them in other data structures.
 ///
+/// @external_type(moonbit, "builtin", "Option")
 pub type Option(a) {
   Some(a)
   None

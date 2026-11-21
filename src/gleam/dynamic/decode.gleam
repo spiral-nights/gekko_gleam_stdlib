@@ -1,3 +1,5 @@
+// Modified for MoonBit target (gekko) — see NOTICE and LICENCE.
+
 //// The `Dynamic` type is used to represent dynamically typed data. That is, data
 //// that we don't know the precise type of yet, so we need to introspect the data to
 //// see if it is of the desired type before we can use it. Typically data like this
@@ -451,6 +453,7 @@ fn index(
 
 @external(erlang, "gleam_stdlib", "index")
 @external(javascript, "../../gleam_stdlib.mjs", "index")
+/// @external(moonbit, "gleam_stdlib_ffi", "decode_bare_index")
 fn bare_index(data: Dynamic, key: anything) -> Result(Option(Dynamic), String)
 
 fn push_path(
@@ -658,6 +661,7 @@ fn decode_string(data: Dynamic) -> #(String, List(DecodeError)) {
 }
 
 @external(javascript, "../../gleam_stdlib.mjs", "string")
+/// @external(moonbit, "gleam_stdlib_ffi", "decode_dynamic_string")
 fn dynamic_string(from data: Dynamic) -> Result(String, String) {
   case dynamic_bit_array(data) {
     Ok(data) ->
@@ -715,6 +719,7 @@ fn decode_int(data: Dynamic) -> #(Int, List(DecodeError)) {
 
 @external(erlang, "gleam_stdlib", "int")
 @external(javascript, "../../gleam_stdlib.mjs", "int")
+/// @external(moonbit, "gleam_stdlib_ffi", "decode_dynamic_int")
 fn dynamic_int(data: Dynamic) -> Result(Int, Int)
 
 /// A decoder that decodes `Float` values.
@@ -741,6 +746,7 @@ fn decode_float(data: Dynamic) -> #(Float, List(DecodeError)) {
 
 @external(erlang, "gleam_stdlib", "float")
 @external(javascript, "../../gleam_stdlib.mjs", "float")
+/// @external(moonbit, "gleam_stdlib_ffi", "decode_dynamic_float")
 fn dynamic_float(data: Dynamic) -> Result(Float, Float)
 
 /// A decoder that decodes `Dynamic` values. This decoder never returns an error.
@@ -775,6 +781,7 @@ fn decode_bit_array(data: Dynamic) -> #(BitArray, List(DecodeError)) {
 
 @external(erlang, "gleam_stdlib", "bit_array")
 @external(javascript, "../../gleam_stdlib.mjs", "bit_array")
+/// @external(moonbit, "gleam_stdlib_ffi", "decode_dynamic_bit_array")
 fn dynamic_bit_array(data: Dynamic) -> Result(BitArray, BitArray)
 
 /// A decoder that decodes lists where all elements are decoded with a given
@@ -797,15 +804,49 @@ pub fn list(of inner: Decoder(a)) -> Decoder(List(a)) {
   })
 }
 
+// MoonBit fallback: split element extraction into `decode_list_elements` so
+// `gleam_stdlib_ffi` does not need to import `gleam_dynamic_decode` (which
+// would create a circular MoonBit package dependency on `DecodeError`).
 @external(erlang, "gleam_stdlib", "list")
 @external(javascript, "../../gleam_stdlib.mjs", "list")
 fn decode_list(
   data: Dynamic,
   item: fn(Dynamic) -> #(t, List(DecodeError)),
-  push_path: fn(#(t, List(DecodeError)), key) -> #(t, List(DecodeError)),
+  push_path: fn(#(t, List(DecodeError)), Int) -> #(t, List(DecodeError)),
   index: Int,
   acc: List(t),
-) -> #(List(t), List(DecodeError))
+) -> #(List(t), List(DecodeError)) {
+  case decode_list_elements(data) {
+    Error(_) -> #(list.reverse(acc), decode_error("List", data))
+    Ok(elements) -> decode_list_loop(elements, item, push_path, index, acc)
+  }
+}
+
+fn decode_list_loop(
+  elements: List(Dynamic),
+  item: fn(Dynamic) -> #(t, List(DecodeError)),
+  push_path: fn(#(t, List(DecodeError)), Int) -> #(t, List(DecodeError)),
+  index: Int,
+  acc: List(t),
+) -> #(List(t), List(DecodeError)) {
+  case elements {
+    [] -> #(list.reverse(acc), [])
+    [element, ..rest] ->
+      case item(element) {
+        #(decoded, []) ->
+          decode_list_loop(rest, item, push_path, index + 1, [decoded, ..acc])
+        #(_, _) as layer -> {
+          let #(_, errors) = push_path(layer, index)
+          #([], errors)
+        }
+      }
+  }
+}
+
+/// @external(moonbit, "gleam_stdlib_ffi", "decode_list_elements")
+fn decode_list_elements(_data: Dynamic) -> Result(List(Dynamic), Nil) {
+  Error(Nil)
+}
 
 /// A decoder that decodes dicts where all keys and values are decoded with
 /// given decoders.
@@ -871,6 +912,7 @@ fn fold_dict(
 
 @external(erlang, "gleam_stdlib", "dict")
 @external(javascript, "../../gleam_stdlib.mjs", "dict")
+/// @external(moonbit, "gleam_stdlib_ffi", "decode_dict")
 fn decode_dict(data: Dynamic) -> Result(Dict(Dynamic, Dynamic), Nil)
 
 /// A decoder that decodes nullable values of a type decoded by with a given
@@ -1126,8 +1168,10 @@ pub fn recursive(inner: fn() -> Decoder(a)) -> Decoder(a) {
 
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../../gleam_stdlib.mjs", "identity")
+/// @external(moonbit, "gleam_stdlib_ffi", "decode_cast")
 fn cast(a: anything) -> Dynamic
 
 @external(erlang, "gleam_stdlib", "is_null")
 @external(javascript, "../../gleam_stdlib.mjs", "is_null")
+/// @external(moonbit, "gleam_stdlib_ffi", "decode_is_null")
 fn is_null(a: Dynamic) -> Bool

@@ -1,3 +1,5 @@
+// Modified for MoonBit target (gekko) — see NOTICE and LICENCE.
+
 //// BitArrays are a sequence of binary data of any length.
 
 import gleam/int
@@ -11,22 +13,26 @@ import gleam/string
 ///
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../gleam_stdlib.mjs", "bit_array_from_string")
+/// @external(moonbit, "gleam_stdlib_ffi", "bit_array_from_string")
 pub fn from_string(x: String) -> BitArray
 
 /// Returns an integer which is the number of bits in the bit array.
 ///
 @external(erlang, "erlang", "bit_size")
 @external(javascript, "../gleam_stdlib.mjs", "bit_array_bit_size")
+/// @external(moonbit, "gleam_stdlib_ffi", "bit_array_bit_size")
 pub fn bit_size(x: BitArray) -> Int
 
 /// Returns an integer which is the number of bytes in the bit array.
 ///
 @external(erlang, "erlang", "byte_size")
 @external(javascript, "../gleam_stdlib.mjs", "bit_array_byte_size")
+/// @external(moonbit, "gleam_stdlib_ffi", "bit_array_byte_size")
 pub fn byte_size(x: BitArray) -> Int
 
 /// Pads a bit array with zeros so that it is a whole number of bytes.
 ///
+/// @external(moonbit, "gleam_stdlib_ffi", "bit_array_pad_to_bytes")
 pub fn pad_to_bytes(data: BitArray) -> BitArray {
   case bit_size(data) % 8 {
     0 -> data
@@ -63,6 +69,7 @@ pub fn append(to first: BitArray, suffix second: BitArray) -> BitArray {
 ///
 @external(erlang, "gleam_stdlib", "bit_array_slice")
 @external(javascript, "../gleam_stdlib.mjs", "bit_array_slice")
+/// @external(moonbit, "gleam_stdlib_ffi", "bit_array_slice")
 pub fn slice(
   from string: BitArray,
   at position: Int,
@@ -70,6 +77,7 @@ pub fn slice(
 ) -> Result(BitArray, Nil)
 
 /// Tests to see whether a bit array is valid UTF-8.
+/// @external(moonbit, "gleam_stdlib_ffi", "bit_array_is_utf8")
 pub fn is_utf8(bits: BitArray) -> Bool {
   is_utf8_implementation(bits)
 }
@@ -178,6 +186,7 @@ fn erlang_is_utf8(bits: BitArray) -> Bool
 /// Returns an error if the bit array is invalid UTF-8 data.
 ///
 @external(javascript, "../gleam_stdlib.mjs", "bit_array_to_string")
+/// @external(moonbit, "gleam_stdlib_ffi", "bit_array_to_string")
 pub fn to_string(bits: BitArray) -> Result(String, Nil) {
   case is_utf8(bits) {
     True -> Ok(unsafe_to_string(bits))
@@ -202,6 +211,7 @@ fn unsafe_to_string(a: BitArray) -> String
 ///
 @external(erlang, "gleam_stdlib", "bit_array_concat")
 @external(javascript, "../gleam_stdlib.mjs", "bit_array_concat")
+/// @external(moonbit, "gleam_stdlib_ffi", "bit_array_concat")
 pub fn concat(bit_arrays: List(BitArray)) -> BitArray
 
 /// Encodes a BitArray into a base 64 encoded string.
@@ -211,6 +221,7 @@ pub fn concat(bit_arrays: List(BitArray)) -> BitArray
 ///
 @external(erlang, "gleam_stdlib", "base64_encode")
 @external(javascript, "../gleam_stdlib.mjs", "base64_encode")
+/// @external(moonbit, "gleam_stdlib_ffi", "bit_array_base64_encode")
 pub fn base64_encode(input: BitArray, padding: Bool) -> String
 
 /// Decodes a base 64 encoded string into a `BitArray`.
@@ -225,6 +236,7 @@ pub fn base64_decode(encoded: String) -> Result(BitArray, Nil) {
 
 @external(erlang, "gleam_stdlib", "base64_decode")
 @external(javascript, "../gleam_stdlib.mjs", "base64_decode")
+/// @external(moonbit, "gleam_stdlib_ffi", "bit_array_base64_decode")
 fn decode64(a: String) -> Result(BitArray, Nil)
 
 /// Encodes a `BitArray` into a base 64 encoded string with URL and filename
@@ -257,12 +269,14 @@ pub fn base64_url_decode(encoded: String) -> Result(BitArray, Nil) {
 ///
 @external(erlang, "gleam_stdlib", "base16_encode")
 @external(javascript, "../gleam_stdlib.mjs", "base16_encode")
+/// @external(moonbit, "gleam_stdlib_ffi", "bit_array_base16_encode")
 pub fn base16_encode(input: BitArray) -> String
 
 /// Decodes a base 16 encoded string into a `BitArray`.
 ///
 @external(erlang, "gleam_stdlib", "base16_decode")
 @external(javascript, "../gleam_stdlib.mjs", "base16_decode")
+/// @external(moonbit, "gleam_stdlib_ffi", "bit_array_base16_decode")
 pub fn base16_decode(input: String) -> Result(BitArray, Nil)
 
 /// Converts a bit array to a string containing the decimal value of each byte.
@@ -280,6 +294,7 @@ pub fn base16_decode(input: String) -> Result(BitArray, Nil)
 /// assert bit_array.inspect(<<100, 5:3>>) == "<<100, 5:size(3)>>"
 /// ```
 ///
+/// @external(moonbit, "gleam_stdlib_ffi", "bit_array_inspect")
 pub fn inspect(input: BitArray) -> String {
   inspect_loop(input, "<<") <> ">>"
 }
@@ -326,6 +341,7 @@ fn inspect_loop(input: BitArray, accumulator: String) -> String {
 /// assert bit_array.compare(<<1, 2:size(2)>>, with: <<1, 2:size(2)>>) == Eq
 /// ```
 ///
+/// @external(moonbit, "gleam_stdlib_ffi", "bit_array_compare")
 pub fn compare(a: BitArray, with b: BitArray) -> order.Order {
   case a, b {
     <<first_byte, first_rest:bits>>, <<second_byte, second_rest:bits>> ->
@@ -366,6 +382,7 @@ fn bit_array_to_int_and_size(a: BitArray) -> #(Int, Int)
 /// ```
 ///
 @external(javascript, "../gleam_stdlib.mjs", "bit_array_starts_with")
+/// @external(moonbit, "gleam_stdlib_ffi", "bit_array_starts_with")
 pub fn starts_with(bits: BitArray, prefix: BitArray) -> Bool {
   let prefix_size = bit_size(prefix)
 

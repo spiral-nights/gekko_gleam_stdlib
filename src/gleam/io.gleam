@@ -1,3 +1,5 @@
+// Modified for MoonBit target (gekko) — see NOTICE and LICENCE.
+
 /// Writes a string to standard output (stdout).
 ///
 /// If you want your output to be printed on its own line see `println`.
@@ -11,6 +13,7 @@
 ///
 @external(erlang, "gleam_stdlib", "print")
 @external(javascript, "../gleam_stdlib.mjs", "print")
+/// @external(moonbit, "gleam_stdlib_ffi", "io_print")
 pub fn print(string: String) -> Nil
 
 /// Writes a string to standard error (stderr).
@@ -26,6 +29,7 @@ pub fn print(string: String) -> Nil
 ///
 @external(erlang, "gleam_stdlib", "print_error")
 @external(javascript, "../gleam_stdlib.mjs", "print_error")
+/// @external(moonbit, "gleam_stdlib_ffi", "io_print_error")
 pub fn print_error(string: String) -> Nil
 
 /// Writes a string to standard output (stdout), appending a newline to the end.
@@ -39,6 +43,7 @@ pub fn print_error(string: String) -> Nil
 ///
 @external(erlang, "gleam_stdlib", "println")
 @external(javascript, "../gleam_stdlib.mjs", "console_log")
+/// @external(moonbit, "gleam_stdlib_ffi", "io_println")
 pub fn println(string: String) -> Nil
 
 /// Writes a string to standard error (stderr), appending a newline to the end.
@@ -52,4 +57,5 @@ pub fn println(string: String) -> Nil
 ///
 @external(erlang, "gleam_stdlib", "println_error")
 @external(javascript, "../gleam_stdlib.mjs", "console_error")
+/// @external(moonbit, "gleam_stdlib_ffi", "io_println_error")
 pub fn println_error(string: String) -> Nil

@@ -1,3 +1,5 @@
+// Modified for MoonBit target (gekko) — see NOTICE and LICENCE.
+
 //// Strings are Gleam's text type, written in code using double quotes,
 //// `"like this"`.
 ////
@@ -59,6 +61,7 @@ pub fn is_empty(str: String) -> Bool {
 ///
 @external(erlang, "string", "length")
 @external(javascript, "../gleam_stdlib.mjs", "string_length")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_length")
 pub fn length(string: String) -> Int
 
 /// Reverses a `String`.
@@ -116,6 +119,7 @@ pub fn replace(
 ///
 @external(erlang, "string", "lowercase")
 @external(javascript, "../gleam_stdlib.mjs", "lowercase")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_lowercase")
 pub fn lowercase(string: String) -> String
 
 /// Creates a new `String` with all the graphemes in the input `String` converted to
@@ -131,6 +135,7 @@ pub fn lowercase(string: String) -> String
 ///
 @external(erlang, "string", "uppercase")
 @external(javascript, "../gleam_stdlib.mjs", "uppercase")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_uppercase")
 pub fn uppercase(string: String) -> String
 
 /// Compares two `String`s to see which is "larger" by comparing their graphemes.
@@ -164,6 +169,7 @@ pub fn compare(a: String, b: String) -> order.Order {
 
 @external(erlang, "gleam_stdlib", "less_than")
 @external(javascript, "../gleam_stdlib.mjs", "less_than")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_less_than")
 fn less_than(a: String, b: String) -> Bool
 
 /// Takes a substring given a start grapheme index and a length. Negative indexes
@@ -218,10 +224,12 @@ pub fn slice(
 
 @external(erlang, "gleam_stdlib", "slice")
 @external(javascript, "../gleam_stdlib.mjs", "string_grapheme_slice")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_grapheme_slice")
 fn grapheme_slice(string: String, index: Int, length: Int) -> String
 
 @external(erlang, "binary", "part")
 @external(javascript, "../gleam_stdlib.mjs", "string_byte_slice")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_byte_slice")
 fn unsafe_byte_slice(string: String, index: Int, length: Int) -> String
 
 /// Drops contents of the first `String` that occur before the second `String`.
@@ -236,6 +244,7 @@ fn unsafe_byte_slice(string: String, index: Int, length: Int) -> String
 ///
 @external(erlang, "gleam_stdlib", "crop_string")
 @external(javascript, "../gleam_stdlib.mjs", "crop_string")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_crop")
 pub fn crop(from string: String, before substring: String) -> String
 
 /// Drops *n* graphemes from the start of a `String`.
@@ -296,6 +305,7 @@ pub fn drop_end(from string: String, up_to num_graphemes: Int) -> String {
 ///
 @external(erlang, "gleam_stdlib", "contains_string")
 @external(javascript, "../gleam_stdlib.mjs", "contains_string")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_contains")
 pub fn contains(does haystack: String, contain needle: String) -> Bool
 
 /// Checks whether the first `String` starts with the second one.
@@ -308,6 +318,7 @@ pub fn contains(does haystack: String, contain needle: String) -> Bool
 ///
 @external(erlang, "gleam_stdlib", "string_starts_with")
 @external(javascript, "../gleam_stdlib.mjs", "starts_with")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_starts_with")
 pub fn starts_with(string: String, prefix: String) -> Bool
 
 /// Checks whether the first `String` ends with the second one.
@@ -320,6 +331,7 @@ pub fn starts_with(string: String, prefix: String) -> Bool
 ///
 @external(erlang, "gleam_stdlib", "string_ends_with")
 @external(javascript, "../gleam_stdlib.mjs", "ends_with")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_ends_with")
 pub fn ends_with(string: String, suffix: String) -> Bool
 
 /// Creates a list of `String`s by splitting a given string on a given substring.
@@ -361,6 +373,7 @@ pub fn split(x: String, on substring: String) -> List(String) {
 /// ```
 ///
 @external(javascript, "../gleam_stdlib.mjs", "split_once")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_split_once")
 pub fn split_once(
   string: String,
   on substring: String,
@@ -557,6 +570,7 @@ fn padding(size: Int, pad_string: String) -> String {
 /// assert string.trim("  hats  \n") == "hats"
 /// ```
 ///
+/// @external(moonbit, "gleam_stdlib_ffi", "string_trim")
 pub fn trim(string: String) -> String {
   string |> trim_start |> trim_end
 }
@@ -578,6 +592,7 @@ type Direction {
 /// ```
 ///
 @external(javascript, "../gleam_stdlib.mjs", "trim_start")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_trim_start")
 pub fn trim_start(string: String) -> String {
   erl_trim(string, Leading)
 }
@@ -591,6 +606,7 @@ pub fn trim_start(string: String) -> String {
 /// ```
 ///
 @external(javascript, "../gleam_stdlib.mjs", "trim_end")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_trim_end")
 pub fn trim_end(string: String) -> String {
   erl_trim(string, Trailing)
 }
@@ -615,6 +631,7 @@ pub fn trim_end(string: String) -> String {
 ///
 @external(erlang, "gleam_stdlib", "string_pop_grapheme")
 @external(javascript, "../gleam_stdlib.mjs", "pop_grapheme")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_pop_grapheme")
 pub fn pop_grapheme(string: String) -> Result(#(String, String), Nil)
 
 /// Converts a `String` to a list of
@@ -643,6 +660,7 @@ fn to_graphemes_loop(string: String, acc: List(String)) -> List(String) {
 
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../gleam_stdlib.mjs", "codepoint")
+/// @external(moonbit, "gleam_stdlib_ffi", "unsafe_int_to_utf_codepoint")
 fn unsafe_int_to_utf_codepoint(a: Int) -> UtfCodepoint
 
 /// Converts a `String` to a `List` of `UtfCodepoint`.
@@ -670,6 +688,7 @@ fn unsafe_int_to_utf_codepoint(a: Int) -> UtfCodepoint
 ///   ]
 /// ```
 ///
+/// @external(moonbit, "gleam_stdlib_ffi", "string_to_utf_codepoints")
 pub fn to_utf_codepoints(string: String) -> List(UtfCodepoint) {
   do_to_utf_codepoints(string)
 }
@@ -719,6 +738,7 @@ fn string_to_codepoint_integer_list(string: String) -> List(Int)
 ///
 @external(erlang, "gleam_stdlib", "utf_codepoint_list_to_string")
 @external(javascript, "../gleam_stdlib.mjs", "utf_codepoint_list_to_string")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_from_utf_codepoints")
 pub fn from_utf_codepoints(utf_codepoints: List(UtfCodepoint)) -> String
 
 /// Converts an integer to a `UtfCodepoint`.
@@ -745,6 +765,7 @@ pub fn utf_codepoint(value: Int) -> Result(UtfCodepoint, Nil) {
 ///
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../gleam_stdlib.mjs", "utf_codepoint_to_int")
+/// @external(moonbit, "gleam_stdlib_ffi", "utf_codepoint_to_int")
 pub fn utf_codepoint_to_int(cp: UtfCodepoint) -> Int
 
 /// Converts a `String` into `Option(String)` where an empty `String` becomes
@@ -861,6 +882,7 @@ pub fn inspect(term: anything) -> String {
 
 @external(erlang, "gleam_stdlib", "inspect")
 @external(javascript, "../gleam_stdlib.mjs", "inspect")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_do_inspect")
 fn do_inspect(term: anything) -> StringTree
 
 /// Returns the number of bytes in a `String`.
@@ -876,6 +898,7 @@ fn do_inspect(term: anything) -> StringTree
 ///
 @external(erlang, "erlang", "byte_size")
 @external(javascript, "../gleam_stdlib.mjs", "byte_size")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_byte_size")
 pub fn byte_size(string: String) -> Int
 
 /// Removes the given prefix from the start of a `String`, if present.
@@ -895,6 +918,7 @@ pub fn byte_size(string: String) -> Int
 ///
 @external(erlang, "gleam_stdlib", "string_remove_prefix")
 @external(javascript, "../gleam_stdlib.mjs", "string_remove_prefix")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_remove_prefix")
 pub fn remove_prefix(from string: String, matching prefix: String) -> String
 
 /// Removes the given suffix from the end of a `String`, if present.
@@ -914,4 +938,5 @@ pub fn remove_prefix(from string: String, matching prefix: String) -> String
 ///
 @external(erlang, "gleam_stdlib", "string_remove_suffix")
 @external(javascript, "../gleam_stdlib.mjs", "string_remove_suffix")
+/// @external(moonbit, "gleam_stdlib_ffi", "string_remove_suffix")
 pub fn remove_suffix(from string: String, matching suffix: String) -> String

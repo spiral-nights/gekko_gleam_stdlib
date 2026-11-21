@@ -1,3 +1,5 @@
+// Modified for MoonBit target (gekko) — see NOTICE and LICENCE.
+
 import gleam/option.{type Option}
 
 /// A dictionary of keys and values.
@@ -14,6 +16,7 @@ import gleam/option.{type Option}
 /// See [the Erlang map module](https://erlang.org/doc/man/maps.html) for more
 /// information.
 ///
+/// @external_type(moonbit, "gleam_stdlib_ffi", "Dict")
 pub type Dict(key, value)
 
 /// "TransientDict" is a mutable view on a dictionary used internally by the
@@ -21,18 +24,21 @@ pub type Dict(key, value)
 ///
 /// Transients are to be treated as having a linear (single-use, think rust) type.
 /// A transient value becomes invalid as soon as it's passed to one of the functions.
+/// @external_type(moonbit, "gleam_stdlib_ffi", "TransientDict")
 type TransientDict(key, value)
 
 /// Convert a normal Dict to a transient dict.
 /// A transient dict is a mutable copy of the original.
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../dict.mjs", "toTransient")
+/// @external(moonbit, "gleam_stdlib_ffi", "dict_to_transient")
 fn to_transient(dict: Dict(key, value)) -> TransientDict(key, value)
 
 /// Convert a transient dict back into a normal dict, freezing its contents.
 /// Using the transient after this point is highly unsafe and leads to undefined behavior.
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../dict.mjs", "fromTransient")
+/// @external(moonbit, "gleam_stdlib_ffi", "dict_from_transient")
 fn from_transient(transient: TransientDict(key, value)) -> Dict(key, value)
 
 /// Determines the number of key-value pairs in the dict.
@@ -50,6 +56,7 @@ fn from_transient(transient: TransientDict(key, value)) -> Dict(key, value)
 ///
 @external(erlang, "maps", "size")
 @external(javascript, "../dict.mjs", "size")
+/// @external(moonbit, "gleam_stdlib_ffi", "dict_size")
 pub fn size(dict: Dict(k, v)) -> Int
 
 /// Determines whether or not the dict is empty.
@@ -132,6 +139,7 @@ fn from_list_loop(
 /// ```
 ///
 @external(javascript, "../dict.mjs", "has")
+/// @external(moonbit, "gleam_stdlib_ffi", "dict_has_key")
 pub fn has_key(dict: Dict(k, v), key: k) -> Bool {
   do_has_key(key, dict)
 }
@@ -143,6 +151,7 @@ fn do_has_key(key: k, dict: Dict(k, v)) -> Bool
 ///
 @external(erlang, "maps", "new")
 @external(javascript, "../dict.mjs", "make")
+/// @external(moonbit, "gleam_stdlib_ffi", "dict_new")
 pub fn new() -> Dict(k, v)
 
 /// Fetches a value from a dict for a given key.
@@ -162,6 +171,7 @@ pub fn new() -> Dict(k, v)
 ///
 @external(erlang, "gleam_stdlib", "map_get")
 @external(javascript, "../dict.mjs", "get")
+/// @external(moonbit, "gleam_stdlib_ffi", "dict_get")
 pub fn get(from: Dict(k, v), get: k) -> Result(v, Nil)
 
 /// Inserts a value into the dict with the given key.
@@ -181,6 +191,7 @@ pub fn get(from: Dict(k, v), get: k) -> Result(v, Nil)
 /// ```
 ///
 @external(javascript, "../dict.mjs", "insert")
+/// @external(moonbit, "gleam_stdlib_ffi", "dict_insert")
 pub fn insert(
   into dict: Dict(k, v),
   for key: k,
@@ -194,6 +205,7 @@ fn do_insert(key: k, value: v, dict: Dict(k, v)) -> Dict(k, v)
 
 @external(erlang, "maps", "put")
 @external(javascript, "../dict.mjs", "destructiveTransientInsert")
+/// @external(moonbit, "gleam_stdlib_ffi", "dict_transient_insert")
 fn transient_insert(
   key: k,
   value: v,
@@ -212,6 +224,7 @@ fn transient_insert(
 /// ```
 ///
 @external(javascript, "../dict.mjs", "map")
+/// @external(moonbit, "gleam_stdlib_ffi", "dict_map_values")
 pub fn map_values(in dict: Dict(k, v), with fun: fn(k, v) -> a) -> Dict(k, a) {
   do_map_values(fun, dict)
 }
@@ -375,6 +388,7 @@ pub fn delete(from dict: Dict(k, v), delete key: k) -> Dict(k, v) {
 
 @external(erlang, "maps", "remove")
 @external(javascript, "../dict.mjs", "destructiveTransientDelete")
+/// @external(moonbit, "gleam_stdlib_ffi", "dict_transient_delete")
 fn transient_delete(a: k, b: TransientDict(k, v)) -> TransientDict(k, v)
 
 /// Creates a new dict from a given dict with all the same entries except any with
@@ -480,6 +494,7 @@ pub fn upsert(
 /// ```
 ///
 @external(javascript, "../dict.mjs", "fold")
+/// @external(moonbit, "gleam_stdlib_ffi", "dict_fold")
 pub fn fold(
   over dict: Dict(k, v),
   from initial: acc,
@@ -562,6 +577,7 @@ fn do_combine(
 
 @external(erlang, "maps", "update_with")
 @external(javascript, "../dict.mjs", "destructiveTransientUpdateWith")
+/// @external(moonbit, "gleam_stdlib_ffi", "dict_transient_update_with")
 fn transient_update_with(
   key: k,
   fun: fn(v) -> v,
