@@ -1,15 +1,17 @@
 # stdlib
 
-> **MoonBit / `gekko` Fork:** This is a modified fork of [`gleam-lang/stdlib`](https://github.com/gleam-lang/stdlib) for [`gekko`](https://github.com/spiral-nights/gekko) (see [`NOTICE`](./NOTICE) and [`LICENCE`](./LICENCE)). It preserves full Erlang and JavaScript compatibility while adding `/// @external(moonbit, ...)` pragmas and native MoonBit FFI backing packages under `moonbit/gleam_stdlib_ffi/`.
+> [!WARNING]
+> **Deprecated:** This forked `gleam_stdlib` repository is deprecated in favor of unmodified upstream Hex [`gleam_stdlib`](https://hex.pm/packages/gleam_stdlib) paired with the companion shim [`gekko_stdlib`](https://github.com/spiral-nights/gekko_stdlib).
 >
-> Use it in a `gekko` target project's `gleam.toml`:
+> **Migrate your `gleam.toml`:**
 >
 > ```toml
 > [dependencies]
-> gleam_stdlib = { git = "https://github.com/spiral-nights/gleam_stdlib.git", ref = "main" }
+> gleam_stdlib = ">= 1.0.0 and < 2.0.0"
+> gekko_stdlib = { git = "https://github.com/spiral-nights/gekko_stdlib.git", ref = "main" }
 > ```
 >
-> Because the package name stays `gleam_stdlib`, transitive Hex dependencies requiring `gleam_stdlib` resolve automatically against this fork (provided `version` satisfies their SemVer constraint).
+> This repository remains available read-only so existing pinned commits continue to resolve, and will no longer receive updates.
 
 [![Package Version](https://img.shields.io/hexpm/v/gleam_stdlib)](https://hex.pm/packages/gleam_stdlib)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/gleam_stdlib/)
